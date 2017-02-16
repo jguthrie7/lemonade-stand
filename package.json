@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bitcore-lib": "^0.13.19",
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.15.1",
+    "mongoose": "^4.8.3"
+  },
+  "name": "lemonade-stand",
+  "description": "Tutorial service for Bitcore",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitpay/lemonade-stand.git"
+  },
+  "keywords": [
+    "bitcore"
+  ],
+  "author": "BitPay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitpay/lemonade-stand/issues"
+  },
+  "homepage": "https://github.com/bitpay/lemonade-stand#readme",
+  "private": true
+}
