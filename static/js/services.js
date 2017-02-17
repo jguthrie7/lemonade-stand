@@ -7,7 +7,7 @@ myApp.factory('Auth', ['$http', function ($http) {
     login: authFactory('login'),
     signup: authFactory('signup'),
     createInvoice: createInvoice,
-    getInvoices: getInvoices
+    getInvoices: getInvoices,
   };
 
   //  Function factory for creating the login and signup methods
@@ -53,7 +53,8 @@ myApp.factory('Auth', ['$http', function ($http) {
 
     return {
       setName: setName,
-      getName: getName
+      getName: getName,
+      logout: logout
     };
 
     function setName(name) {
@@ -63,4 +64,10 @@ myApp.factory('Auth', ['$http', function ($http) {
     function getName() {
       return $window.localStorage.getItem('name');
     }
+    function  logout() {
+      $window.localStorage.setItem('name', '');
+      $window.localStorage.setItem('token', '');
+    }
+
+
   }]);

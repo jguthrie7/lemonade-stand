@@ -54,9 +54,14 @@ myApp.controller('loginController', ['$window', '$location', 'Auth', 'Session',
   vm.username = Session.getName();
   vm.submitForm = submitForm;
   vm.token = $window.localStorage.getItem('token');
+  vm.logout = logout;
 
   function submitForm(amount) {
     $window.location.href = '/invoice';
+  }
+  function logout() {
+    Session.logout();
+    $location.path('/');
   }
 }])
 
