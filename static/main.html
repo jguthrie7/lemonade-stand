@@ -1,0 +1,13 @@
+<h2>Login</h2>
+<a ng-href="#!/create-account">Create Account</a>
+<form ng-submit="vm.login(vm.username, vm.password)">
+    <div>
+        <label>Username</label>
+        <input type="text" ng-model="vm.username">
+    </div>
+    <div>
+        <label>Password</label>
+        <input type="password" ng-model="vm.password">
+    </div>
+    <input type="submit" value="Login" class="btn btn-primary"/>
+</form>

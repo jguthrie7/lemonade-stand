@@ -10,10 +10,16 @@
 </head>
 
 <body>
-  <h1>Lemonade Stand</h1>
+  <a href="/lemonade-stand"><h1>Lemonade Stand</h1></a>
   <h2>Invoice</h2>
   <div id="qrcode"></div>
   <p>Please send {{amount}} BTC to {{address}}</p>
+  <div>
+    <a href="/lemonade-stand/#!/invoice-create">Back to Invoice creation</a>
+  </div>
+  <div>
+    <a href="/lemonade-stand/#!/view-history">View Invoice History</a>
+  </div>
   <h2>Transactions Received</h2>
   <ul id="txids">
   </ul>
@@ -36,5 +42,6 @@
     socket.emit('subscribe', 'bitcoind/addresstxid', ['{{address}}']);
   </script>
 </body>
+
 
 </html>

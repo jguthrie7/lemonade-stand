@@ -1,0 +1,9 @@
+<p>Welcome {{vm.username}}</p>
+<h2>Create Invoice</h2>
+
+<form method="post" action="invoice">
+Amount: <input type="text" name="amount"/>
+    <input type="text" name="token" ng-model="vm.token" style="display: none">
+    BTC <input type="submit" value="Generate Invoice" class="btn btn-success"/>
+</form>
+<a ng-href="#!/view-history">View Invoice History</a>

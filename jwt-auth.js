@@ -1,22 +1,18 @@
 /**
  * Created by JohnGuthrie on 2/16/17.
  */
-
+var jwt = require('jsonwebtoken');
 var config = require('./config');
 var helpers = require('./helpers');
 module.exports = function jwtAuth(req, res, next) {
-  const header = req.headers.authorization;
-  var token = '';
-
-  try {
-    if (header !== undefined) {
-      token = header.split(' ')[1];
-    }
-  } catch (e) {
-    e.message = 'jwtAuth - ' + e.message;
-    throw e;
+  var header = req.headers.authorization;
+  if (header !== undefined) {
+    token = header.split(' ')[1];
+  } else if (req.body) {
+      token = req.body.token;
+  } else {
+    token = '';
   }
-
   if (token.length !== 0) {
     jwt.verify(token, config.secret, function (err, user) {
       if (err) helpers.returnFail(res, 401, 'Wrong token.');

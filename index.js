@@ -6,6 +6,7 @@ var bitcore = require('../../node_modules/bitcore-lib/');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var User = require('./user.model');
+var Invoice = require('./invoice.model');
 var authRouter = require('./auth.routes');
 
 function LemonadeStand(options) {
@@ -59,12 +60,30 @@ LemonadeStand.prototype.setupRoutes = function(app, express) {
 
   //  Add middleware for checking JWT
   //  Routes after this will need to include the token
-  // app.use(require('./jwt-auth'));
+  app.use(require('./jwt-auth'));
+
+  app.get('/myInvoice', function(req, res, next) {
+    var email = req.user._doc.email;
+    Invoice.find({email: email})
+      .then(function(response) {
+        res.status(200).send(response);
+      });
+  })
 
   app.post('/invoice', function(req, res, next) {
+
+    console.log('token');
+    console.log(req.body.token);
+    self.user = req.user._doc;
+    console.log('user');
+    console.log(self.user);
     self.addressIndex++;
     self.amount = parseFloat(req.body.amount) * 1e8;
-    res.status(200).send(self.filterInvoiceHTML());
+    self.filterInvoiceHTML()
+      .then(function(HTML) {
+        res.status(200).send(HTML);
+      });
+    // res.status(200).send(self.filterInvoiceHTML());
   });
 };
 
@@ -75,14 +94,25 @@ LemonadeStand.prototype.getRoutePrefix = function() {
 LemonadeStand.prototype.filterInvoiceHTML = function() {
   var btc = this.amount / 1e8;
   var address = this.hdPrivateKey.derive(this.addressIndex).privateKey.toAddress();
-  this.log.info('New invoice with address:', address);
-  var hash = address.hashBuffer.toString('hex');
-  var transformed = this.invoiceHtml
-    .replace(/{{amount}}/g, btc)
-    .replace(/{{address}}/g, address)
-    .replace(/{{hash}}/g, hash)
-    .replace(/{{baseUrl}}/g, '/' + this.getRoutePrefix() + '/');
-  return transformed;
+  var _this = this;
+
+  //  Insert the invoice into the database
+  var newInvoice = new Invoice({
+    email: this.user.email,
+    address: address,
+    amount: btc
+  });
+  return newInvoice.save()
+    .then(function(res) {
+      _this.log.info('New invoice with address:', address);
+      var hash = address.hashBuffer.toString('hex');
+      var transformed = _this.invoiceHtml
+        .replace(/{{amount}}/g, btc)
+        .replace(/{{address}}/g, address)
+        .replace(/{{hash}}/g, hash)
+        .replace(/{{baseUrl}}/g, '/' + _this.getRoutePrefix() + '/');
+      return transformed;
+    })
 };
 
 module.exports = LemonadeStand;

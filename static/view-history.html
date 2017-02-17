@@ -1,0 +1,10 @@
+<p>Invoice History for {{vm.username}}</p>
+<h2>Invoice History</h2>
+<table class="table">
+    <th>Bitcoin Amount</th>
+    <th>Address</th>
+    <tr ng-repeat="invoice in vm.invoices">
+        <td>{{invoice.amount}}</td>
+        <td>{{invoice.address}}</td>
+    </tr>
+</table>

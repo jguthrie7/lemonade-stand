@@ -29,26 +29,21 @@ function loginPost(req, res) {
     User.findOne({ email: email })
       .exec()
       .then(function (user) {
-        if (!user) return helpers.returnFail(res, 404, 'No such user exist.');
-        return {
-          result: user.comparePassword(password),
-          user: user
-        }
-      })
-      .then(function (resultObj) {
-        result = resultObj.result;
-        user = resultObj.user;
-        if (result) {
-          // do this if it matches
-          const token = jwt.sign(user, config.secret, {
-            //  token only valid for 1 hour
-            expiresIn: '1h'
-          });
-          const msg = 'Login succeeded';
-          return helpers.returnSuccess(res, 200, msg, { token: token });
-        }
-        // do this if it doesn't
-        return helpers.returnFail(res, 401, 'Wrong credentials.');
+        if (!user) return helpers.returnFail(res, 404, 'No such user exists.');
+        return user.comparePassword(password)
+          .then(function (result) {
+            if (result) {
+              // do this if it matches
+              const token = jwt.sign(user, config.secret, {
+                //  token only valid for 1 hour
+                expiresIn: '1h'
+              });
+              const msg = 'Login succeeded';
+              return helpers.returnSuccess(res, 200, msg, { token: token });
+            }
+            // do this if it doesn't
+            return helpers.returnFail(res, 401, 'Wrong credentials.');
+          })
       })
       .catch(function (err) {
         console.log(err.stack);
@@ -80,7 +75,7 @@ function signUpPost(req, res) {
         console.log(newUser);
         return newUser.save();
       })
-      .then(function() {
+      .then(function () {
         return helpers.returnSuccess(res, 201, 'account created successfully for ' + email, {});
       })
       .catch(function (err) {
